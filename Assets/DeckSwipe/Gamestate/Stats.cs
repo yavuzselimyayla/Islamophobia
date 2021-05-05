@@ -2,6 +2,7 @@
 using DeckSwipe.CardModel;
 using DeckSwipe.World;
 using UnityEngine;
+using UnityEngine.Analytics;
 
 namespace DeckSwipe.Gamestate {
 	
@@ -35,8 +36,14 @@ namespace DeckSwipe.Gamestate {
 			Hope = ClampValue(Hope + mod.hope);
 			
 			Stat5 = Stat5 + mod.stat5;
-			Debug.Log(Stat5);
+			AnalyticsResult analyticsResult = Analytics.CustomEvent("Islamophobia",
+				new Dictionary<string, object> {
+					{"TotalCardsPlayed", Game.totalCardsPlayed},
+					{"Islamophobia Level", Stat5}}
+					);
 			
+			Debug.Log(Stat5 + " - analyticsResult: "+analyticsResult);
+
 			TriggerAllListeners();			
 		}
 		
@@ -51,6 +58,7 @@ namespace DeckSwipe.Gamestate {
 			Health = ClampValue(_startingHealth);
 			Hope = ClampValue(_startingHope);
 			Stat5 = _startingStat5;
+			
 		}
 		
 		private static void TriggerAllListeners() {

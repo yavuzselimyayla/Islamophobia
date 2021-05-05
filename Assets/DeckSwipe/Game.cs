@@ -48,6 +48,7 @@ namespace DeckSwipe {
 			progressStorage = new ProgressStorage(cardStorage);
 
 			GameStartOverlay.FadeOutCallback = StartGameplayLoop;
+			totalCardsPlayed = PlayerPrefs.GetInt("TotalCardsPlayed");
 		}
 
 		private void Start() {
@@ -96,7 +97,11 @@ namespace DeckSwipe {
 			}
 		}
 
+		public static int totalCardsPlayed=0;
 		public void CardActionPerformed() {
+			totalCardsPlayed++;
+			PlayerPrefs.SetInt("TotalCardsPlayed", totalCardsPlayed);			
+			
 			progressStorage.Progress.AddDays(Random.Range(0.5f, 1.5f),
 					daysPassedPreviously);
 			ProgressDisplay.SetDaysSurvived(
