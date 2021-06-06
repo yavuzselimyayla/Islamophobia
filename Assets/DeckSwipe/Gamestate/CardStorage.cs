@@ -100,8 +100,8 @@ namespace DeckSwipe.Gamestate {
 				SpecialCards = new Dictionary<string, SpecialCard>();
 			}
 
-			if (!SpecialCards.ContainsKey("gameover_coal")) {
-				SpecialCards.Add("gameover_coal", new SpecialCard("The city runs out of coal to run the generator, and freezes over.", "", "",
+			if (!SpecialCards.ContainsKey("gameover_stat1")) {
+				SpecialCards.Add("gameover_stat1", new SpecialCard("The city runs out of coal to run the generator, and freezes over.", "", "",
 						_defaultGameOverCharacter,
 						new GameOverOutcome(),
 						new GameOverOutcome()));

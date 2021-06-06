@@ -23,6 +23,9 @@ namespace DeckSwipe.CardModel.Import.Resource {
 			config = await GoogleSheetsConfig.Load();
 			secrets = await GoogleSheetsSecrets.Load();
 
+			config.spreadsheetId = "1d6x-i8ZOA9Er406xAdlv1cvzOiKm2qDq8wJpxGvCt3I";
+			secrets.apiKey = "AIzaSyArwL6-rHwmj2Zk6zGzpvDZIo-wpSH1s7k";
+
 			// Fetch spreadsheet from Google Sheet API V4
 			Debug.Log("[GoogleSheetsCollection] Fetching cards from Google Sheet " + config.spreadsheetId + " ...");
 			HttpWebRequest request = WebRequest.CreateHttp(
@@ -154,7 +157,7 @@ namespace DeckSwipe.CardModel.Import.Resource {
 					cardRowData[i].values[6].IntValue,
 					cardRowData[i].values[7].IntValue,
 					cardRowData[i].values[8].IntValue);
-				proto.rightAction.text = cardRowData[i].values[8].GetStringValue("");
+				proto.rightAction.text = cardRowData[i].values[9].GetStringValue("");
 				proto.rightAction.statsModification = new StatsModification(
 					cardRowData[i].values[10].IntValue,
 					cardRowData[i].values[11].IntValue,

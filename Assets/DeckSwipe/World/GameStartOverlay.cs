@@ -157,40 +157,16 @@ namespace DeckSwipe.World {
 		}
 		
 		private static string ApproximateDate(float daysPassed) {
-			int year = 1887 + (int)(daysPassed / 365.25f);
+			int year = 2000 + (int)(daysPassed / 365.25f);
 			int month = (int)((daysPassed % 365.25f) / 30.4375f);
 			return MonthName(month) + " " + year;
 		}
 		
 		private static string MonthName(int monthIndex) {
-			switch (monthIndex) {
-				case 0:
-					return "January";
-				case 1:
-					return "February";
-				case 2:
-					return "March";
-				case 3:
-					return "April";
-				case 4:
-					return "May";
-				case 5:
-					return "June";
-				case 6:
-					return "July";
-				case 7:
-					return "August";
-				case 8:
-					return "September";
-				case 9:
-					return "October";
-				case 10:
-					return "November";
-				case 11:
-					return "December";
-				default:
-					return "";
-			}
+			List<string> months = new List<string> (){
+				"Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+				"Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"};
+			return months[monthIndex];
 		}
 		
 		private static void SetColorAlpha(Graphic image, float alpha) {

@@ -27,10 +27,10 @@ namespace DeckSwipe.World {
 		}
 		
 		public void TriggerUpdate() {
-			coalBar.fillAmount = Mathf.Lerp(minFillAmount, maxFillAmount, Stats.CoalPercentage);
-			foodBar.fillAmount = Mathf.Lerp(minFillAmount, maxFillAmount, Stats.FoodPercentage);
-			healthBar.fillAmount = Mathf.Lerp(minFillAmount, maxFillAmount, Stats.HealthPercentage);
-			hopeBar.fillAmount = Mathf.Lerp(minFillAmount, maxFillAmount, Stats.HopePercentage);
+			coalBar.fillAmount = Mathf.Lerp(minFillAmount, maxFillAmount, Stats.Stat1Percentage);
+			foodBar.fillAmount = Mathf.Lerp(minFillAmount, maxFillAmount, Stats.Stat2Percentage);
+			healthBar.fillAmount = Mathf.Lerp(minFillAmount, maxFillAmount, Stats.Stat3Percentage);
+			hopeBar.fillAmount = Mathf.Lerp(minFillAmount, maxFillAmount, Stats.Stat4Percentage);
 		}
 		
 	}

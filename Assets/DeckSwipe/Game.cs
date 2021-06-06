@@ -74,17 +74,17 @@ namespace DeckSwipe {
 		}
 
 		public void DrawNextCard() {
-			if (Stats.Coal == 0) {
-				SpawnCard(cardStorage.SpecialCard("gameover_coal"));
+			if (Stats.Stat1 == 0) {
+				SpawnCard(cardStorage.SpecialCard("gameover_stat1"));
 			}
-			else if (Stats.Food == 0) {
-				SpawnCard(cardStorage.SpecialCard("gameover_food"));
+			else if (Stats.Stat2 == 0) {
+				SpawnCard(cardStorage.SpecialCard("gameover_stat2"));
 			}
-			else if (Stats.Health == 0) {
-				SpawnCard(cardStorage.SpecialCard("gameover_health"));
+			else if (Stats.Stat3 == 0) {
+				SpawnCard(cardStorage.SpecialCard("gameover_stat3"));
 			}
-			else if (Stats.Hope == 0) {
-				SpawnCard(cardStorage.SpecialCard("gameover_hope"));
+			else if (Stats.Stat4 == 0) {
+				SpawnCard(cardStorage.SpecialCard("gameover_stat4"));
 			}
 			else {
 				IFollowup followup = cardDrawQueue.Next();
