@@ -8,124 +8,141 @@ using UnityEngine;
 
 namespace DeckSwipe {
 
-	public class Game : MonoBehaviour {
+    public class Game : MonoBehaviour {
 
-		private const int _saveInterval = 8;
+        private const int _saveInterval = 8;
 
-		public InputDispatcher inputDispatcher;
-		public CardBehaviour cardPrefab;
-		public Vector3 spawnPosition;
-		public Sprite defaultCharacterSprite;
-		public bool loadRemoteCollectionFirst;
+        public InputDispatcher inputDispatcher;
+        public CardBehaviour cardPrefab;
+        public Vector3 spawnPosition;
+        public Sprite defaultCharacterSprite;
+        public bool loadRemoteCollectionFirst;
+        public static int totalCardsPlayed = 0;
 
-		public CardStorage CardStorage {
-			get { return cardStorage; }
-		}
+        public CardStorage CardStorage {
+            get { return cardStorage; }
+        }
 
-		private CardStorage cardStorage;
-		private ProgressStorage progressStorage;
-		private float daysPassedPreviously;
-		private float daysLastRun;
-		private int saveIntervalCounter;
-		private CardDrawQueue cardDrawQueue = new CardDrawQueue();
+        private CardStorage cardStorage;
+        private ProgressStorage progressStorage;
+        private float daysPassedPreviously;
+        private float daysLastRun;
+        private int saveIntervalCounter;
+        private CardDrawQueue cardDrawQueue = new CardDrawQueue();
 
-		private void Awake() {
-			// Listen for Escape key ('Back' on Android) that suspends the game on Android
-			// or ends it on any other platform
-			#if UNITY_ANDROID
-			inputDispatcher.AddKeyUpHandler(KeyCode.Escape,
-					keyCode => {
-						AndroidJavaObject activity = new AndroidJavaClass("com.unity3d.player.UnityPlayer")
-							.GetStatic<AndroidJavaObject>("currentActivity");
-						activity.Call<bool>("moveTaskToBack", true);
-					});
-			#else
+        private void Awake() {
+            // Listen for Escape key ('Back' on Android) that suspends the game on Android
+            // or ends it on any other platform
+#if UNITY_ANDROID
+            inputDispatcher.AddKeyUpHandler(KeyCode.Escape,
+                    keyCode => {
+                        AndroidJavaObject activity = new AndroidJavaClass("com.unity3d.player.UnityPlayer")
+                            .GetStatic<AndroidJavaObject>("currentActivity");
+                        activity.Call<bool>("moveTaskToBack", true);
+                    });
+#else
 			inputDispatcher.AddKeyDownHandler(KeyCode.Escape,
 					keyCode => Application.Quit());
-			#endif
+#endif
 
-			cardStorage = new CardStorage(defaultCharacterSprite, loadRemoteCollectionFirst);
-			progressStorage = new ProgressStorage(cardStorage);
+            cardStorage = new CardStorage(defaultCharacterSprite, loadRemoteCollectionFirst);
+            progressStorage = new ProgressStorage(cardStorage);
 
-			GameStartOverlay.FadeOutCallback = StartGameplayLoop;
-			totalCardsPlayed = PlayerPrefs.GetInt("TotalCardsPlayed");
-		}
+            GameStartOverlay.FadeOutCallback = StartGameplayLoop;
+            totalCardsPlayed = PlayerPrefs.GetInt("TotalCardsPlayed");
+        }
 
-		private void Start() {
-			CallbackWhenDoneLoading(StartGame);
-		}
+        private void Start() {
+            CallbackWhenDoneLoading(StartGame);
+        }
 
-		private void StartGame() {
-			daysPassedPreviously = progressStorage.Progress.daysPassed;
-			GameStartOverlay.StartSequence(progressStorage.Progress.daysPassed, daysLastRun);
-		}
+        private void StartGame() {
+            daysPassedPreviously = progressStorage.Progress.daysPassed;
+            GameStartOverlay.StartSequence(progressStorage.Progress.daysPassed, daysLastRun);
+        }
 
-		public void RestartGame() {
-			progressStorage.Save();
-			daysLastRun = progressStorage.Progress.daysPassed - daysPassedPreviously;
-			cardDrawQueue.Clear();
-			StartGame();
-		}
+        public void RestartGame() {
+            progressStorage.Save();
+            daysLastRun = progressStorage.Progress.daysPassed - daysPassedPreviously;
+            cardDrawQueue.Clear();
+            StartGame();
+        }
 
-		private void StartGameplayLoop() {
-			Stats.ResetStats();
-			ProgressDisplay.SetDaysSurvived(0);
-			DrawNextCard();
-		}
+        private void StartGameplayLoop() {
+            Stats.ResetStats();
+            ProgressDisplay.SetDaysSurvived(0);
+            DrawNextCard();
+        }
 
-		public void DrawNextCard() {
-			if (Stats.Stat1 == 0) {
-				SpawnCard(cardStorage.SpecialCard("gameover_stat1"));
-			}
-			else if (Stats.Stat2 == 0) {
-				SpawnCard(cardStorage.SpecialCard("gameover_stat2"));
-			}
-			else if (Stats.Stat3 == 0) {
-				SpawnCard(cardStorage.SpecialCard("gameover_stat3"));
-			}
-			else if (Stats.Stat4 == 0) {
-				SpawnCard(cardStorage.SpecialCard("gameover_stat4"));
-			}
-			else {
-				IFollowup followup = cardDrawQueue.Next();
-				ICard card = followup?.Fetch(cardStorage) ?? cardStorage.Random();
-				SpawnCard(card);
-			}
-			saveIntervalCounter = (saveIntervalCounter - 1) % _saveInterval;
-			if (saveIntervalCounter == 0) {
-				progressStorage.Save();
-			}
-		}
+        public void DrawNextCard() {
+            Debug.Log(totalCardsPlayed);
 
-		public static int totalCardsPlayed=0;
-		public void CardActionPerformed() {
-			totalCardsPlayed++;
-			PlayerPrefs.SetInt("TotalCardsPlayed", totalCardsPlayed);			
-			
-			progressStorage.Progress.AddDays(Random.Range(0.5f, 1.5f),
-					daysPassedPreviously);
-			ProgressDisplay.SetDaysSurvived(
-					(int)(progressStorage.Progress.daysPassed - daysPassedPreviously));
-			DrawNextCard();
-		}
+            if (totalCardsPlayed == 0) {
+                SpawnCard(cardStorage.ForId(33));
+                AddFollowupCard(new Followup(34, 0));
+                AddFollowupCard(new Followup(35, 1));
+                AddFollowupCard(new Followup(36, 2));
+                AddFollowupCard(new Followup(37, 3));
+            }
+            else if (Stats.Stat1 == 0) {
+                SpawnCard(cardStorage.SpecialCard("gameover_stat1"));
+            }
+            else if (Stats.Stat2 == 0) {
+                SpawnCard(cardStorage.SpecialCard("gameover_stat2"));
+            }
+            else if (Stats.Stat3 == 0) {
+                SpawnCard(cardStorage.SpecialCard("gameover_stat3"));
+            }
+            else if (Stats.Stat4 == 0) {
+                SpawnCard(cardStorage.SpecialCard("gameover_stat4"));
+            }
+            else {
+                IFollowup followup = cardDrawQueue.Next();
+                ICard card = followup?.Fetch(cardStorage) ?? cardStorage.Random();
+                if (totalCardsPlayed > 5 && (card.CardText.Equals("İslamofobinin ne olduğu biliyor musunuz?") ||
+                    card.CardText.Equals("Myanmar'da 2016'dan bu yana 35.000 müslümanın katledildiğini biliyor muydunuz?") ||
+                    card.CardText.Equals("15 Mart 2019'da Yeni Zellanda'da bir camide Brenton Tarrant tarafından 50 müslümanın öldürüldüğü saldırıyı duydunuz mu?") ||
+                    card.CardText.Equals("2011 Norveç Saldırılarını biliyor musunuz?") ||
+                    card.CardText.Equals("AFO (Operasyonel Güçler Eylemi) örgütünü biliyor musunuz?"))) {
+                    Debug.Log("Redo");
+                    DrawNextCard();
+                    return;
+                }
 
-		public void AddFollowupCard(IFollowup followup) {
-			cardDrawQueue.Insert(followup);
-		}
+                SpawnCard(card);
+            }
+            saveIntervalCounter = (saveIntervalCounter - 1) % _saveInterval;
+            if (saveIntervalCounter == 0) {
+                progressStorage.Save();
+            }
+        }
 
-		private async void CallbackWhenDoneLoading(Callback callback) {
-			await progressStorage.ProgressStorageInit;
-			callback();
-		}
+        public void CardActionPerformed() {
+            totalCardsPlayed++;
+            PlayerPrefs.SetInt("TotalCardsPlayed", totalCardsPlayed);
 
-		private void SpawnCard(ICard card) {
-			CardBehaviour cardInstance = Instantiate(cardPrefab, spawnPosition,
-					Quaternion.Euler(0.0f, -180.0f, 0.0f));
-			cardInstance.Card = card;
-			cardInstance.snapPosition.y = spawnPosition.y;
-			cardInstance.Controller = this;
-		}
+            progressStorage.Progress.AddDays(Random.Range(0.5f, 1.5f),
+                    daysPassedPreviously);
+            ProgressDisplay.SetDaysSurvived(
+                    (int)(progressStorage.Progress.daysPassed - daysPassedPreviously));
+            DrawNextCard();
+        }
 
-	}
+        public void AddFollowupCard(IFollowup followup) {
+            cardDrawQueue.Insert(followup);
+        }
 
+        private async void CallbackWhenDoneLoading(Callback callback) {
+            await progressStorage.ProgressStorageInit;
+            callback();
+        }
+
+        private void SpawnCard(ICard card) {
+            CardBehaviour cardInstance = Instantiate(cardPrefab, spawnPosition,
+                    Quaternion.Euler(0.0f, -180.0f, 0.0f));
+            cardInstance.Card = card;
+            cardInstance.snapPosition.y = spawnPosition.y;
+            cardInstance.Controller = this;
+        }
+    }
 }

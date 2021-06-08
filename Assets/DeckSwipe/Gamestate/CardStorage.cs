@@ -106,20 +106,20 @@ namespace DeckSwipe.Gamestate {
 						new GameOverOutcome(),
 						new GameOverOutcome()));
 			}
-			if (!SpecialCards.ContainsKey("gameover_food")) {
-				SpecialCards.Add("gameover_food", new SpecialCard("Hunger consumes the city, as food reserves deplete.", "", "",
+			if (!SpecialCards.ContainsKey("gameover_stat2")) {
+				SpecialCards.Add("gameover_stat2", new SpecialCard("Hunger consumes the city, as food reserves deplete.", "", "",
 						_defaultGameOverCharacter,
 						new GameOverOutcome(),
 						new GameOverOutcome()));
 			}
-			if (!SpecialCards.ContainsKey("gameover_health")) {
-				SpecialCards.Add("gameover_health", new SpecialCard("The city's population succumbs to wounds and spreading diseases.", "", "",
+			if (!SpecialCards.ContainsKey("gameover_stat3")) {
+				SpecialCards.Add("gameover_stat3", new SpecialCard("The city's population succumbs to wounds and spreading diseases.", "", "",
 						_defaultGameOverCharacter,
 						new GameOverOutcome(),
 						new GameOverOutcome()));
 			}
-			if (!SpecialCards.ContainsKey("gameover_hope")) {
-				SpecialCards.Add("gameover_hope", new SpecialCard("All hope among the people is lost.", "", "",
+			if (!SpecialCards.ContainsKey("gameover_stat4")) {
+				SpecialCards.Add("gameover_stat4", new SpecialCard("All hope among the people is lost.", "", "",
 						_defaultGameOverCharacter,
 						new GameOverOutcome(),
 						new GameOverOutcome()));

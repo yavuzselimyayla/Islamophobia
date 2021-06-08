@@ -19,14 +19,8 @@ namespace DeckSwipe.CardModel.DrawQueue {
 			this.delay = delay;
 		}
 
-		public IFollowup Clone() {
-			return new Followup(id, delay);
-		}
+		public IFollowup Clone() => new Followup(id, delay);
 
-		public ICard Fetch(CardStorage cardStorage) {
-			return cardStorage.ForId(id);
-		}
-
+		public ICard Fetch(CardStorage cardStorage) => cardStorage.ForId(id);
 	}
-
 }
