@@ -325,6 +325,11 @@ namespace DeckSwipe.CardModel.Import {
 					leftActionOutcome = new GameOverOutcome();
 					rightActionOutcome = new GameOverOutcome();
 				}
+				else if(protoSpecialCard.id == "firstCard"){
+					leftActionOutcome = new ActionOutcome(0,0,0,0,0);
+					rightActionOutcome = new ActionOutcome(0,0,0,0,0);
+				}
+
 
 				SpecialCard specialCard = new SpecialCard(
 						protoSpecialCard.cardText,

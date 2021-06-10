@@ -86,16 +86,6 @@ namespace DeckSwipe.CardModel {
             rightSwipeOutcome.Perform(controller);
 
             Debug.Log(CardText);
-
-            if (CardText.Equals("İslamofobinin ne olduğu biliyor musunuz?") ||
-                    CardText.Equals("Myanmar'da 2016'dan bu yana 35.000 müslümanın katledildiğini biliyor muydunuz?") ||
-                    CardText.Equals("15 Mart 2019'da Yeni Zellanda'da bir camide Brenton Tarrant tarafından 50 müslümanın öldürüldüğü saldırıyı duydunuz mu?") ||
-                    CardText.Equals("2011 Norveç Saldırılarını biliyor musunuz?") ||
-                    CardText.Equals("AFO (Operasyonel Güçler Eylemi) örgütünü biliyor musunuz?")) {
-                AnalyticsResult analyticsResult = Analytics.CustomEvent("Survey", new Dictionary<string, object>{
-                    {CardText, RightSwipeText} });
-                Debug.Log($"{CardText} - {RightSwipeText}");
-            }
         }
 
         public void CheckPrerequisite(ICard dependency, CardStorage cardStorage) {

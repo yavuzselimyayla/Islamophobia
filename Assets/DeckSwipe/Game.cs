@@ -18,6 +18,7 @@ namespace DeckSwipe {
         public Sprite defaultCharacterSprite;
         public bool loadRemoteCollectionFirst;
         public static int totalCardsPlayed = 0;
+        public static int islamophobiaLevel = 0;
 
         public CardStorage CardStorage {
             get { return cardStorage; }
@@ -29,6 +30,7 @@ namespace DeckSwipe {
         private float daysLastRun;
         private int saveIntervalCounter;
         private CardDrawQueue cardDrawQueue = new CardDrawQueue();
+        private bool isFirst = true;
 
         private void Awake() {
             // Listen for Escape key ('Back' on Android) that suspends the game on Android
@@ -50,6 +52,7 @@ namespace DeckSwipe {
 
             GameStartOverlay.FadeOutCallback = StartGameplayLoop;
             totalCardsPlayed = PlayerPrefs.GetInt("TotalCardsPlayed");
+            islamophobiaLevel = PlayerPrefs.GetInt("IslamophobiaLevel");
         }
 
         private void Start() {
@@ -77,12 +80,9 @@ namespace DeckSwipe {
         public void DrawNextCard() {
             Debug.Log(totalCardsPlayed);
 
-            if (totalCardsPlayed == 0) {
-                SpawnCard(cardStorage.ForId(33));
-                AddFollowupCard(new Followup(34, 0));
-                AddFollowupCard(new Followup(35, 1));
-                AddFollowupCard(new Followup(36, 2));
-                AddFollowupCard(new Followup(37, 3));
+            if (totalCardsPlayed == 0 && isFirst) {
+                SpawnCard(cardStorage.SpecialCard("firstCard"));
+                isFirst = false;
             }
             else if (Stats.Stat1 == 0) {
                 SpawnCard(cardStorage.SpecialCard("gameover_stat1"));
@@ -99,16 +99,6 @@ namespace DeckSwipe {
             else {
                 IFollowup followup = cardDrawQueue.Next();
                 ICard card = followup?.Fetch(cardStorage) ?? cardStorage.Random();
-                if (totalCardsPlayed > 5 && (card.CardText.Equals("İslamofobinin ne olduğu biliyor musunuz?") ||
-                    card.CardText.Equals("Myanmar'da 2016'dan bu yana 35.000 müslümanın katledildiğini biliyor muydunuz?") ||
-                    card.CardText.Equals("15 Mart 2019'da Yeni Zellanda'da bir camide Brenton Tarrant tarafından 50 müslümanın öldürüldüğü saldırıyı duydunuz mu?") ||
-                    card.CardText.Equals("2011 Norveç Saldırılarını biliyor musunuz?") ||
-                    card.CardText.Equals("AFO (Operasyonel Güçler Eylemi) örgütünü biliyor musunuz?"))) {
-                    Debug.Log("Redo");
-                    DrawNextCard();
-                    return;
-                }
-
                 SpawnCard(card);
             }
             saveIntervalCounter = (saveIntervalCounter - 1) % _saveInterval;
@@ -120,7 +110,7 @@ namespace DeckSwipe {
         public void CardActionPerformed() {
             totalCardsPlayed++;
             PlayerPrefs.SetInt("TotalCardsPlayed", totalCardsPlayed);
-
+            PlayerPrefs.Save();
             progressStorage.Progress.AddDays(Random.Range(0.5f, 1.5f),
                     daysPassedPreviously);
             ProgressDisplay.SetDaysSurvived(

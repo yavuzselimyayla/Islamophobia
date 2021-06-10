@@ -36,12 +36,17 @@ namespace DeckSwipe.Gamestate {
 			Stat4 = ClampValue(Stat4 + mod.stat4);
 			
 			Stat5 = Stat5 + mod.stat5;
-			AnalyticsResult analyticsResult = Analytics.CustomEvent("Islamophobia",
+			Game.islamophobiaLevel += mod.stat5;
+			PlayerPrefs.SetInt("IslamophobiaLevel", Game.islamophobiaLevel);
+            PlayerPrefs.Save();
+
+			AnalyticsResult analyticsResult = Analytics.CustomEvent("Islamophobia Analysis",
 				new Dictionary<string, object> {
 					{"TotalCardsPlayed", Game.totalCardsPlayed},
-					{"Islamophobia Level", Stat5}}
-					);
-			
+					// {"Islamophobia Level", Stat5},
+					{"Level of Islamophobia", Game.islamophobiaLevel},
+					{"Card - Islamophobia", $"{Game.totalCardsPlayed} -{Game.islamophobiaLevel} "}});
+
 			Debug.Log(Stat5 + " - analyticsResult: "+analyticsResult);
 
 			TriggerAllListeners();			
