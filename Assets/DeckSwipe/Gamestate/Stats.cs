@@ -43,7 +43,6 @@ namespace DeckSwipe.Gamestate {
 			AnalyticsResult analyticsResult = Analytics.CustomEvent("Islamophobia Analysis",
 				new Dictionary<string, object> {
 					{"TotalCardsPlayed", Game.totalCardsPlayed},
-					// {"Islamophobia Level", Stat5},
 					{"Level of Islamophobia", Game.islamophobiaLevel},
 					{"Card - Islamophobia", $"{Game.totalCardsPlayed} -{Game.islamophobiaLevel} "}});
 
